@@ -34,8 +34,6 @@ a:hover {
 	position: absolute; top: 300px; width: 760px; color: white;
 }
 
-position: relative; left: 100px; height: 15px; width: 0px; background: red;
-
 #msg{
   position: absolute;
   top: 570px;
@@ -91,4 +89,19 @@ position: relative; left: 100px; height: 15px; width: 0px; background: red;
   position: absolute;
   top: 610px;
   z-index: 1;
+}
+
+#welcome-screen{
+  background: url("images/startscreen.png");
+  width: 760px;
+  height: 600px;
+  margin-left: 20px;
+  position: absolute;
+  z-index: 100;
+  padding-top: 250px;
+  text-align: center;
+  color: white;
+}
+#start-button{
+  cursor: pointer;
 }

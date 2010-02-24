@@ -32,12 +32,10 @@ $(function(){
   view = new JarmView();
   registerCallbacks();
 
-  //game.state = "paused";
-  
-  keyTracker = $.gameQuery.keyTracker;
+  game.state = "not-started";
 
-  $().setLoadBar("loadingBar", 400);
-  $('#msgRight').hide();
+  keyTracker = $.gameQuery.keyTracker;
+  $().setLoadBar("loading-bar", 400);
 });
 
 function loadPlants(){
@@ -92,19 +90,19 @@ function loadShop(){
 }
 
 function registerCallbacks(){
-	game.playground
-		.registerCallback(gameLoop, JarmView.frameRate)
-		.registerCallback(function() {view.update();}, view.updateRate);
-	
-	$('#startbutton').click(function(){
-		game.state = "playing";
-		game.playground.startGame(function(){
-			$("#welcomeScreen").remove();
-		});
-	});
-	
-	$(document).keypress(onKeyPress);
-	$(document).click(onClick);  
-	$(document).rightClick(rightClick);  
+  game.playground
+    .registerCallback(gameLoop, JarmView.frameRate)
+    .registerCallback(function() {view.update();}, view.updateRate);
+
+  $("#start-button").click(function(){
+    game.state = "playing";
+    game.playground
+      .startGame(function(){
+        $("#welcome-screen").remove();
+      });
+  });
+
+  $(document).keypress(onKeyPress);
+  $(document).click(onClick);
 }
 
