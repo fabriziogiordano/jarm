@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 $(function(){
-  $("#playground").playground({width: 800, height: 600, keyTracker: true});
+  $("#playground").playground({width: 760, height: 600, keyTracker: true});
   game.playground = $.playground();
   game.background = $("#sceengraph");
 
@@ -37,6 +37,8 @@ $(function(){
     .startGame();
 
   keyTracker = $.gameQuery.keyTracker;
+  
+  $('#msgRight').hide();
 });
 
 function loadPlants(){
@@ -91,6 +93,7 @@ function registerCallbacks(){
     .registerCallback(gameLoop, JarmView.frameRate)
     .registerCallback(function() {view.update();}, view.updateRate);
   $(document).keypress(onKeyPress);
-  $(document).click(onClick);
+  $(document).click(onClick);  
+  $(document).rightClick(rightClick);  
 }
 

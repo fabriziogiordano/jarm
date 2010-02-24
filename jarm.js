@@ -153,6 +153,10 @@ function onKeyPress(ev){
 }
 
 function onClick(ev){
+	if( ev.button == 2 ) {return false;}
+	$('#msgRight').hide();
+	
+	
   if (game.state == "playing"){
     if (ev.originalTarget.tagName.toLowerCase() != "a"){
       // When you click a dialog item in Firefox it 
@@ -169,4 +173,12 @@ function onClick(ev){
       }
     }
   }
+}
+
+function rightClick(ev){
+	$('#msgRight').css('top', ev.clientY);
+	$('#msgRight').css('left', ev.clientX);
+	$('#msgRight').show();
+	$('#msgRight').html('banana seeds <a href="#">plow</a>');
+	console.log('X: '+ev.clientX+' Y: '+ev.clientY);
 }

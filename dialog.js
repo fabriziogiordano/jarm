@@ -22,7 +22,7 @@ function Dialog(selector){
 
   this.dlg = $(selector)
     .children(".dlg-content")
-      .end()
+	.end()
     .show();
 }
 Dialog.prototype.close = function(){
