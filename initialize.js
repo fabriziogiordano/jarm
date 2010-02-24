@@ -32,9 +32,7 @@ $(function(){
   view = new JarmView();
   registerCallbacks();
 
-  game.state = "playing";
-  
-  //game.playground.startGame();
+  //game.state = "paused";
   
   keyTracker = $.gameQuery.keyTracker;
 
@@ -98,7 +96,12 @@ function registerCallbacks(){
 		.registerCallback(gameLoop, JarmView.frameRate)
 		.registerCallback(function() {view.update();}, view.updateRate);
 	
-	$('#startbutton').click(function(){ game.playground.startGame(function(){$("#welcomeScreen").remove();});});
+	$('#startbutton').click(function(){
+		game.state = "playing";
+		game.playground.startGame(function(){
+			$("#welcomeScreen").remove();
+		});
+	});
 	
 	$(document).keypress(onKeyPress);
 	$(document).click(onClick);  

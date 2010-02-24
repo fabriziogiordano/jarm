@@ -24,13 +24,13 @@ function Farmer(){
 
   this.animations = {
     idle: new Animation({imageURL: "images/farmer.png"}),
-    west: new Animation({imageURL: "images/walking-west.png",
+    west: new Animation({imageURL: "images/farmer-walking-west.png",
       numberOfFrame: 2, type: $.gameQuery.ANIMATION_HORIZONTAL, rate: JarmView.frameRate * 10, delta: 16}),
-    east: new Animation({imageURL: "images/walking-east.png",
+    east: new Animation({imageURL: "images/farmer-walking-east.png",
       numberOfFrame: 2, type: $.gameQuery.ANIMATION_HORIZONTAL, rate: JarmView.frameRate * 10, delta: 16}),
-    north: new Animation({imageURL: "images/walking-north.png",
+    north: new Animation({imageURL: "images/farmer-walking-north.png",
       numberOfFrame: 2, type: $.gameQuery.ANIMATION_HORIZONTAL, rate: JarmView.frameRate * 10, delta: 16}),
-    south: new Animation({imageURL: "images/walking-south.png",
+    south: new Animation({imageURL: "images/farmer-walking-south.png",
       numberOfFrame: 2, type: $.gameQuery.ANIMATION_HORIZONTAL, rate: JarmView.frameRate * 10, delta: 16})
   };
 
