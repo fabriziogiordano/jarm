@@ -33,11 +33,12 @@ $(function(){
   registerCallbacks();
 
   game.state = "playing";
-  game.playground
-    .startGame();
-
-  keyTracker = $.gameQuery.keyTracker;
   
+  //game.playground.startGame();
+  
+  keyTracker = $.gameQuery.keyTracker;
+
+  $().setLoadBar("loadingBar", 400);
   $('#msgRight').hide();
 });
 
@@ -78,22 +79,25 @@ function loadObjects(){
 }
 
 function loadShop(){
-  game.shop = new Shop();
-  game.shop.animation = new Animation({imageURL: "images/shop.png"});
-
-  game.playground
-    .addSprite("shop", {animation: game.shop.animation,
-      width: 73, height: 48, posx: 30, posy: 30});
-  game.shop.elem = $("#shop");
-  game.objects.add(game.shop.elem, 30, 30);
+	game.shop = new Shop();
+	game.shop.animation = new Animation({imageURL: "images/shop.png"});
+	
+	game.playground
+		.addSprite("shop", {animation: game.shop.animation,width: 73, height: 48, posx: 30, posy: 30});
+	
+	game.shop.elem = $("#shop");
+	game.objects.add(game.shop.elem, 30, 30);
 }
 
 function registerCallbacks(){
-  game.playground
-    .registerCallback(gameLoop, JarmView.frameRate)
-    .registerCallback(function() {view.update();}, view.updateRate);
-  $(document).keypress(onKeyPress);
-  $(document).click(onClick);  
-  $(document).rightClick(rightClick);  
+	game.playground
+		.registerCallback(gameLoop, JarmView.frameRate)
+		.registerCallback(function() {view.update();}, view.updateRate);
+	
+	$('#startbutton').click(function(){ game.playground.startGame(function(){$("#welcomeScreen").remove();});});
+	
+	$(document).keypress(onKeyPress);
+	$(document).click(onClick);  
+	$(document).rightClick(rightClick);  
 }
 

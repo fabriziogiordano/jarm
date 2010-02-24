@@ -4,10 +4,18 @@
     <link rel = "stylesheet" type = "text/css" href = "style.css" />
   </head>
   <body>
-    <div id = "playground"></div>
-    <div id = "msg"></div>
-    <div id = "msgRight"></div>
-    <div id = "sidebar">
+    <div id="playground">
+		<div id="welcomeScreen" style="background: url(./images/startscreen.jpg); width: 600px; height: 600px; position: absolute; z-index: 100;">
+			<div style="position: absolute; top: 320px; width: 600px; color: white;">
+				<div id="loadingBar" style="position: relative; left: 100px; height: 15px; width: 0px; background: red;"></div><br />
+				<center><a style="cursor: pointer;" id="startbutton">Click here to start!</a></center>
+
+			</div>
+		</div>    
+    </div>
+    <div id="msg"></div>
+    <div id="msgRight"></div>
+    <div id="sidebar">
       Inventory:
       <div id = "inventory"></div>
       Money: <span id = "money">0</span>
