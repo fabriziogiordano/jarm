@@ -87,20 +87,20 @@ Farmer.prototype.move = function(dx, dy){
   // this isn't a huge deal since the error will be small at the moment
   newPos.clip(game.worldSize, game.worldSize);
 
-  var hit = false;
+  var hit = null;
   var farmer = this;
   
   // TODO: pull this out into a function called collide()
   $.each(visibleObjects(), function(i, obj){
-    if (hit) { return; }
+    if (hit !== null) { return; }
 
     if ($.gameQueryExt.rectOverlap(newPos.x, newPos.y, farmer.elem.width(), farmer.elem.height(),
         obj.position().left, obj.position().top, obj.width(), obj.height())){
-      hit = true;
+      hit = obj;
     }
   });
 
-  if (!hit){
+  if (hit === null){
     this.pos = newPos;
     this.elem.offset(toWindowCoords(
       {
@@ -110,8 +110,7 @@ Farmer.prototype.move = function(dx, dy){
     ));
     return true;
   }else{
-    // TODO: make some sort of path-finding system to go around obstacles
-    this.vel.zero();
+    this.collided(hit);
   }
   return false;
 };
@@ -121,38 +120,75 @@ Farmer.prototype.eachItem = function(foo){
   $.each(this.inventory, foo);
 };
 
-Farmer.prototype.moveTo = function(target){
-  // TODO: offset this by half the width and height of the farmer so
-  // that the centre of the farmer moves to the point instead of the
-  // top left of the farmer
-  this.target = target;
-  this.vel = target.minus(this.pos).unit().times(Farmer.moveSpeed);
+Farmer.prototype.moveTo = function(targetPoint, obj){
+  this.targetPoint = undefined;
+  this.target = undefined;
+
+  if (targetPoint !== undefined){
+    // TODO: offset this by half the width and height of the farmer so
+    // that the centre of the farmer moves to the point instead of the
+    // top left of the farmer
+    this.targetPoint = targetPoint;
+    this.vel = targetPoint.minus(this.pos).unit().times(Farmer.moveSpeed);
+  }
+  if (obj !== undefined){
+    this.target = obj;
+  }
 }
 
 Farmer.prototype.update = function(dt){
   // close enough?
-  if (this.target !== undefined){
-    if (this.pos.minus(this.target).normSq() <= this.vel.normSq() * 1.2){
-      this.vel.zero();
-      this.target = undefined;
-    }
-
-    //var scaledV = this.vel.times(dt);
-    this.move(this.vel.x, this.vel.y);
-    $("#dbg-msg").html("" + this.pos.x + ", " + this.pos.y);
-
-    if (this.vel.isZero()){
-      this.setAnimation("idle");
-    }else{
-      if (this.vel.y < -Math.abs(this.vel.x)){
-        this.setAnimation("north");
-      }else if (this.vel.y > Math.abs(this.vel.x)){
-        this.setAnimation("south");
-      }else if (this.vel.x > Math.abs(this.vel.y)){
-        this.setAnimation("east");
-      }else{
-        this.setAnimation("west");
-      }
+  if (this.targetPoint !== undefined){
+    if (this.pos.minus(this.targetPoint).normSq() <= this.vel.normSq()){
+      this.arrived();
     }
   }
+  if (this.target !== undefined){
+    var norm = this.vel.norm();
+    if ($.gameQueryExt.rectOverlap(this.pos.x, this.pos.y, this.elem.width(), this.elem.height(),
+        this.target.position().left - norm, this.target.position().top - norm, this.target.width() + norm * 2,
+        this.target.height() + norm * 2)){
+      this.arrived();
+    }
+  }
+
+  if (this.vel.isZero()){
+    this.setAnimation("idle");
+  }else{
+    this.move(this.vel.x, this.vel.y);
+    if (this.vel.y < -Math.abs(this.vel.x)){
+      this.setAnimation("north");
+    }else if (this.vel.y > Math.abs(this.vel.x)){
+      this.setAnimation("south");
+    }else if (this.vel.x > Math.abs(this.vel.y)){
+      this.setAnimation("east");
+    }else{
+      this.setAnimation("west");
+    }
+  }
+}
+
+// Call this when the farmer arrives where he is going
+Farmer.prototype.arrived = function(){
+  if (this.target !== undefined){
+    if (this.target.isPlot){
+      activatePlot(this.target);
+    }else if (this.target.isRock){
+      activateRock(this.target);
+    }else if (this.target.isShop){
+      activateShop(this.target.shop);
+    }
+  }
+
+  this.vel.zero();
+  this.targetPoint = undefined;
+  this.target = undefined;
+}
+
+Farmer.prototype.collided = function(collision){
+  // TODO: make some sort of path-finding system to go around obstacles
+  this.vel.zero();
+
+  this.targetPoint = undefined;
+  this.target = undefined;
 }

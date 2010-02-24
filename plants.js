@@ -85,9 +85,11 @@ Plant.prototype.createSprite = function(x, y){
     height: this.animation.height
   });
   this.elem = $("#plant" + num);
+  this.elem.plant = this;
   this.elem.css({
     backgroundImage: "url(" + this.animation.imageURL + ")"
   });
+  return this.elem;
 }
 Plant.prototype.removeSprite = function(){
   this.elem.remove();

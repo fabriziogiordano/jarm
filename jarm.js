@@ -26,6 +26,7 @@ var game = {
 
   farmer: null,
   plots: {},
+  objectsHash: {},
 
   // config params
   worldSize: 2000,
@@ -36,6 +37,18 @@ var game = {
 var animations = {
 };
 game.objects = new $.gameQueryExt.QuadTree(game.worldSize, game.worldSize);
+game.addObject = function(obj, x, y){
+  if (x !== undefined && x !== undefined){
+    game.objects.add(obj, x, y);
+  }
+
+  if (obj.attr("id") != ""){
+    if (obj.isPlot){
+      game.plots[obj.attr("id")] = obj;
+    }
+    game.objectsHash[obj.attr("id")] = obj;
+  }
+}
 var view;
 
 function toWindowCoords(hash){
@@ -84,8 +97,8 @@ function gameLoop(){
   return false;
 }
 
-function activateBush(bush){
-  // TODO: Make it so a bush can run out of seeds
+function activateRock(rock){
+  // TODO: Make it so a rock can run out of seeds
   var plant = plants.getRandomSeed();
 
   if (plant === null){
@@ -106,7 +119,7 @@ function activateShop(shop){
 }
 
 // This one is called when the user presses space
-function activate(){
+/*function activate(){
   var nearby = visibleObjects();
 
   var obj;
@@ -121,30 +134,35 @@ function activate(){
       }
     }
     if (near(obj, game.farmer.elem, game.searchRadius)){
-      if (obj.attr("id").match(/bush/)){
-        activateBush(obj);
+      //if (obj.attr("id").match(/rock/)){
+      if (obj.isRock){
+        activateRock(obj);
         break;
-      }else if (obj.attr("id").match(/plot/)){
-        activatePlot(game.plots[obj.attr("id")]);
+      //}else if (obj.attr("id").match(/plot/)){
+      }else if (obj.isPlot){
+        //activatePlot(game.plots[obj.attr("id")]);
+        activatePlot(obj);
         break;
       }
     }
   }
-}
+}*/
 
 game.plant = function(plot, plant){
   plot.contains = plant;
-  plant.createSprite(
+  plant.plot = plot;
+  var elem = plant.createSprite(
     plot.position().left + 5,
     plot.position().top - 2
   );
+  game.addObject(elem);
 }
 
 function onKeyPress(ev){
   if (game.state == "playing"){
-    if (ev.which == keycodes.space){
+    /*if (ev.which == keycodes.space){
       activate();
-    }
+    }*/
   }else if (game.state == "paused"){
     if (ev.keyCode == keycodes.escape && game.dialog !== null){
       game.dialog.close();
@@ -162,14 +180,26 @@ function onClick(ev){
       // When you click a dialog item in Firefox it 
       // sends this click event, so we need to make
       // sure we didn't just hit a link
-      // TODO: switch the close X to an A tag
 
       var pg = game.playground.position();
+      var pos, obj;
 
-      if (ev.clientX > pg.left && ev.clientX < pg.left + game.playground.width() &&
+      if (ev.originalTarget.id.match(/^plant\d+/)){
+        obj = game.objectsHash[ev.originalTarget.id].plant.plot;
+      }else if (ev.originalTarget.id.match(/^(plot|rock|shop)/)){
+        obj = game.objectsHash[ev.originalTarget.id];
+      }else if (ev.clientX > pg.left && ev.clientX < pg.left + game.playground.width() &&
           ev.clientY > pg.top && ev.clientY < pg.top + game.playground.height()){
-        var pos = toWorldCoords(ev.clientX, ev.clientY);
-        game.farmer.moveTo(pos);
+        pos = toWorldCoords(ev.clientX, ev.clientY);
+      }
+
+      if (obj !== undefined || pos !== undefined){
+        if (obj !== undefined){
+          pos = $(ev.originalTarget).position();
+          // no need to convert to world coords since these points will already be in world coords
+          pos = new Vector(pos.left, pos.top);
+        }
+        game.farmer.moveTo(pos, obj);
       }
     }
   }

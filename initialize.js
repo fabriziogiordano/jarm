@@ -50,17 +50,19 @@ function loadPlants(){
     game.playground.addSprite("tree" + i, {animation: tree, width: 45, height: 38,
       posx: x, posy: y});
     $("#tree" + i).addClass("collideable");
-    game.objects.add($("#tree" + i), x, y);
+    game.addObject($("#tree" + i), x, y);
   }
 
-  var bush = new Animation({imageURL: "images/bush.png"});
+  var rockAnim = new Animation({imageURL: "images/rock.png"});
   for (var i = 0; i < 30; i++){
     var x = Math.floor(Math.random() * (game.worldSize - 28));
     var y = Math.floor(Math.random() * (game.worldSize - 28));
-    game.playground.addSprite("bush" + i, {animation: bush, width: 40, height: 28,
+    game.playground.addSprite("rock" + i, {animation: rockAnim, width: 40, height: 28,
       posx: x, posy: y});
-    $("#bush" + i).addClass("collideable");
-    game.objects.add($("#bush" + i), x, y);
+    var rock = $("#rock" + i);
+    rock.addClass("collideable");
+    rock.isRock = true;
+    game.addObject(rock, x, y);
   }
 }
 
@@ -73,20 +75,22 @@ function loadObjects(){
         width: 30, height: 30, posx: 260 + (i * 40), posy: 350});
     var plot = $("#plot" + i);
     plot.contains = null;
-    game.objects.add(plot, 260 + i * 40, 350);
-    game.plots["plot" + i] = plot;
+    plot.isPlot = true;
+    game.addObject(plot, 260 + i * 40, 350);
   }
 }
 
 function loadShop(){
-	game.shop = new Shop();
-	game.shop.animation = new Animation({imageURL: "images/shop.png"});
-	
-	game.playground
-		.addSprite("shop", {animation: game.shop.animation,width: 73, height: 48, posx: 30, posy: 30});
-	
-	game.shop.elem = $("#shop");
-	game.objects.add(game.shop.elem, 30, 30);
+  game.shop = new Shop();
+  game.shop.animation = new Animation({imageURL: "images/shop.png"});
+
+  game.playground
+    .addSprite("shop", {animation: game.shop.animation,
+      width: 73, height: 48, posx: 30, posy: 30});
+  game.shop.elem = $("#shop");
+  game.shop.elem.isShop = true;
+  game.shop.elem.shop = game.shop;
+  game.addObject(game.shop.elem, 30, 30);
 }
 
 function registerCallbacks(){
