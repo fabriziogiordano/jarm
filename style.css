@@ -36,6 +36,7 @@ a:hover {
   padding: 5px;
   width: 500px;
   display: none;
+  z-index: 2;
 }
 
 .close-button{
@@ -67,4 +68,5 @@ a:hover {
 .description{
   position: absolute;
   top: 610px;
+  z-index: 1;
 }
